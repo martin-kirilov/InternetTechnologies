@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Complaint</title>
+		<!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/black-tie/jquery-ui.css">
+		 -->
+		 <script>
+			function testResults (form) {
+			    var longitude = form.inputbox1.value;
+			    var latitude = form.inputbox2.value;
+			    var address = form.inputbox3.value;
+			    var message = form.myarea.value;
+			    alert ("Longitude: " + longitude + 
+			    		"Latitude: " + latitude + 
+			    		"Address: " + address + 
+			    		"Message: " + message
+			    );
+			}
+		</script>
+		 
+		 <link rel="stylesheet" href="style.css">
+	</head>
+	
+	<body>
+	
+	<div id="header">
+		<h3 align="center">Web page for automobile complaints.</h3>
+	</div>
+
+	<div id="container">
+		<form name="complaint" action="" method="get">
+			Longitude: <input type="number" name="inputbox1" value=""> <br>
+			Latitude: <input type="number" name="inputbox2" value=""> <br>
+			Address: <input type="text" name="inputbox3" value=""> <br>
+			Message: <textarea name="myarea" COLS="30" ROWS="10"></textarea> <br>
+			<input type="button" name="button" Value="Click" onclick="testResults(this.form)">
+		</form>
+	</div>
+
+	<!-- Jquery plugins-->
+		<script src="./js/libs/jquery-1.10.2/jquery-1.10.2.min.js"></script>
+		<script src="./js/libs/jqueryui-1.10.0/jquery-ui.min.js"></script>
+		<script src="./bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="./js/libs/mustache.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/libs/jquery-mustache/jquery.mustache.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- Bootbox js for alert dialog in the style of bootstrap
+		<script src="./js/libs/bootbox.min.js" type="text/javascript" charset="utf-8"></script>
+ 	->
+ 	
+	<!-- Jquery plugin for validating form data -->
+		<script src="./js/libs/jquery.validate-1.11.1.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- i18n plugin for localization 
+		<script src="./js/libs/i18next-1.6.3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/servercommunication.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/jqueryexample.js" type="text/javascript" charset="utf-8"></script>
+	-->
+
+	</body>
+
+</html>
