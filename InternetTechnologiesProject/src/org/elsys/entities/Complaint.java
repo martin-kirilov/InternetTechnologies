@@ -11,28 +11,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity(name = "Complaints")
 @NamedQueries({
-	@NamedQuery(name = "allComplaints", query = "SELECT * FROM Complaints")
+	@NamedQuery(name = "allComplaints", query = "SELECT c FROM Complaints c")
 })
 public class Complaint {
 	
 	@Id
 	@GeneratedValue
 	private long id;
-
+	
+	/*
 	@Column(length = 128, nullable = false)
-	private String imagePath;
+	public String imagePath;
+	*/
+	@Column(nullable = false)
+	public double latitude;
 	
 	@Column(nullable = false)
-	private double latitude;
-	
-	@Column(nullable = false)
-	private double longitude;
+	public double longitude;
 	
 	@Column(length = 512, nullable = false)
-	private String address;
+	public String address;
 	
 	@Column(length = 1024, nullable = false)
-	private String message;
+	public String message;
 	
 	
 	public long getId() {
@@ -42,7 +43,7 @@ public class Complaint {
 	public void setId(long id) {
 		this.id = id;
 	}
-
+/*
 	public String getImagePath() {
 		return imagePath;
 	}
@@ -50,7 +51,7 @@ public class Complaint {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-
+*/
 	public double getLatitude() {
 		return latitude;
 	}

@@ -14,3 +14,12 @@ $("#button_send").click(function() {
     	dataType: 'json'
     });
 });
+
+$("#button_getAll").click(function() {
+	return $.ajax({
+		url: "api/Rest/getAll",
+		type: "GET",
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'json'
+	});
+});
