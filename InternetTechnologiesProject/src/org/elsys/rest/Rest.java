@@ -1,13 +1,19 @@
 package org.elsys.rest;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.elsys.entities.Complaint;
@@ -26,14 +32,15 @@ public class Rest {
     @POST
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Complaint addComplaint(Complaint c) {
     	//create message
-    	/*
+    	
     	System.out.println(c.getLongitude());
     	System.out.println(c.getLatitude());
     	System.out.println(c.getAddress());
     	System.out.println(c.getMessage());
-    	*/
+    	
     	complaintsService.createComplaint(c);
     	return c;
     }
@@ -49,8 +56,21 @@ public class Rest {
 			System.out.println(complaint.getLatitude());
 			System.out.println(complaint.getAddress());
 			System.out.println(complaint.getMessage());
+			System.out.println(complaint.getImagePath());
 			System.out.println("-----------------------");
 		}
     	return list;
     }
+    
+    @POST
+	@Path("{complaintid}/image")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	public void setComplaintImage(@Context ServletContext ctx,
+			@PathParam("complaintid") long complaintid, InputStream content) throws FileNotFoundException {
+    	//Complaint complaint = em.find(Complaint.class, complaintid);
+    	System.out.println("we accepted the image or at least called the method.");
+    	complaintsService.addImageToComplaint(complaintid, content);
+    }
+    
 }

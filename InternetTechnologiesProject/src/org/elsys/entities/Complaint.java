@@ -19,10 +19,10 @@ public class Complaint {
 	@GeneratedValue
 	private long id;
 	
-	/*
-	@Column(length = 128, nullable = false)
+	
+	@Column(length = 128)
 	public String imagePath;
-	*/
+	
 	@Column(nullable = false)
 	public double latitude;
 	
@@ -43,7 +43,7 @@ public class Complaint {
 	public void setId(long id) {
 		this.id = id;
 	}
-/*
+
 	public String getImagePath() {
 		return imagePath;
 	}
@@ -51,7 +51,7 @@ public class Complaint {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-*/
+
 	public double getLatitude() {
 		return latitude;
 	}

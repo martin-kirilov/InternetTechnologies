@@ -17,6 +17,7 @@ $("#button_send").click(function() {
     	async: false
     });
     alert(jQuery.parseJSON(jqXHR.responseText).id);
+    id = jQuery.parseJSON(jqXHR.responseText).id;
     return jqXHR;
 });
 
@@ -73,11 +74,7 @@ $.FileUpload = function(path,files) {
 	*/
 	alert("Posting to server...");
 
-	var sessionid = $('html').attr('id');
-	alert (sessionid);
-
-	
-	xhr.open("POST", '/Rest/Complaints', true);
+	xhr.open("POST", 'api/Rest/' + id + '/image', true);
 	xhr.setRequestHeader("Cache-Control", "no-cache");
 	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 	xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.fileName));
