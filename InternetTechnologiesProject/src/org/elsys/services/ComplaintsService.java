@@ -46,14 +46,15 @@ public class ComplaintsService {
 		return INSTANCE;
 	}
 	
-	public void addImageToComplaint(long complaintid, InputStream content) throws FileNotFoundException {
+	public Complaint addImageToComplaint(long complaintid, InputStream content) throws FileNotFoundException {
 		final EntityManager em = emf.createEntityManager();
 		final EntityTransaction tx = em.getTransaction();
+		Complaint complaint;
 		
 		try {
 			tx.begin();
-			Complaint complaint = em.find(Complaint.class, complaintid);
-			String filename = "/home/martopc/EEworkspace/InternetTechnologiesProject/Images/"+complaint.getId()+".jpg";
+			complaint = em.find(Complaint.class, complaintid);
+			String filename = "/home/martopc/EEworkspace/InternetTechnologiesProject/" + complaint.getId() + ".jpg";
 			saveToFile(content, filename);
 			System.out.println("saved to file : " + filename);
 			complaint.setImagePath(filename);
@@ -67,19 +68,14 @@ public class ComplaintsService {
 			}
 			em.close();
 		}
+		
+		return complaint;
 	}
 	
 	private void saveToFile(InputStream content, String filename) throws FileNotFoundException {
 		FileOutputStream outputStream = new FileOutputStream(new File(filename));
 		InputStream inputStream = content;
-		// TODO Auto-generated method stub
 		try {
-			// read this file into InputStream
-			
-	 
-			// write the inputStream to a FileOutputStream
-			
-	 
 			int read = 0;
 			byte[] bytes = new byte[1024];
 	 
@@ -135,6 +131,25 @@ public class ComplaintsService {
 		try {
 			return em.createNamedQuery("allComplaints", Complaint.class).getResultList();
 		} finally {
+			em.close();
+		}
+	}
+
+	public void addPlateToComplaint(String result, Complaint c) {
+		final EntityManager em = emf.createEntityManager();
+		final EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			c.setPlateNumber(result);
+			
+			em.merge(c);
+			
+			tx.commit();
+		} finally {
+			if(tx.isActive()) {
+				tx.rollback();
+			}
 			em.close();
 		}
 	}

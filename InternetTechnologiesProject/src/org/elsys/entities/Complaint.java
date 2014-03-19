@@ -19,7 +19,9 @@ public class Complaint {
 	@GeneratedValue
 	private long id;
 	
-	
+	@Column(length = 32)
+	public String plateNumber;
+
 	@Column(length = 128)
 	public String imagePath;
 	
@@ -44,6 +46,14 @@ public class Complaint {
 		this.id = id;
 	}
 
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+	
 	public String getImagePath() {
 		return imagePath;
 	}

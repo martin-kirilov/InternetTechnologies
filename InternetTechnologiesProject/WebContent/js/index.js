@@ -72,7 +72,7 @@ $.FileUpload = function(path,files) {
 		}
 	};
 	*/
-	alert("Posting to server...");
+	//alert("Posting to server...");
 
 	xhr.open("POST", 'api/Rest/' + id + '/image', true);
 	xhr.setRequestHeader("Cache-Control", "no-cache");
@@ -82,6 +82,6 @@ $.FileUpload = function(path,files) {
 	xhr.setRequestHeader("Content-Type", "application/octet-stream");
 	xhr.send(file);
 	
-	alert("After post to server...");
+	//alert("After post to server...");
 
 };

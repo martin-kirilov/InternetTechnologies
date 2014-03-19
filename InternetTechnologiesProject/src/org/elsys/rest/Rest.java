@@ -1,9 +1,14 @@
 package org.elsys.rest;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -57,6 +62,7 @@ public class Rest {
 			System.out.println(complaint.getAddress());
 			System.out.println(complaint.getMessage());
 			System.out.println(complaint.getImagePath());
+			System.out.println(complaint.getPlateNumber());
 			System.out.println("-----------------------");
 		}
     	return list;
@@ -67,10 +73,24 @@ public class Rest {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	public void setComplaintImage(@Context ServletContext ctx,
-			@PathParam("complaintid") long complaintid, InputStream content) throws FileNotFoundException {
+			@PathParam("complaintid") long complaintid, InputStream content) throws IOException, InterruptedException {
     	//Complaint complaint = em.find(Complaint.class, complaintid);
-    	System.out.println("we accepted the image or at least called the method.");
-    	complaintsService.addImageToComplaint(complaintid, content);
+    	Complaint complaint = complaintsService.addImageToComplaint(complaintid, content);
+    	executeOCR(complaint);
+    }
+    
+    
+    public void executeOCR(Complaint c) throws InterruptedException, IOException {
+    	String command = "./LicensePlateRec ./" + c.getId() + ".jpg";
+		System.out.println(command);
+		Process p = Runtime.getRuntime().exec(command);
+		p.waitFor();
+		Scanner sc = new Scanner(p.getInputStream());
+		String result = sc.nextLine();
+		System.out.println(result);
+		//save result into DB.
+		complaintsService.addPlateToComplaint(result, c);
+		sc.close();
     }
     
 }
