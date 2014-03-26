@@ -16,7 +16,6 @@ $("#button_send").click(function() {
     	dataType: 'json',
     	async: false
     });
-    alert(jQuery.parseJSON(jqXHR.responseText).id);
     id = jQuery.parseJSON(jqXHR.responseText).id;
     return jqXHR;
 });
@@ -51,7 +50,6 @@ $.FileUpload = function(path,files) {
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4) {
 			response = $.parseJson(xhr.responseText);
-			alert(response.status);
 		}
 	};
 
@@ -62,7 +60,86 @@ $.FileUpload = function(path,files) {
 	xhr.setRequestHeader("X-File-Size", file.fileSize);
 	xhr.setRequestHeader("Content-Type", "application/octet-stream");
 	xhr.send(file);
+	window.location.reload();
 };
+
+function deleteComplaint(complaintId) {
+	return $.ajax({
+		url: "api/Rest/deleteComplaint/" + complaintId,
+		type: "DELETE",
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'json'
+	});
+}
+
+function createDeleteButton(complaint) {
+	return $("<button>Delete</button>").click(function() {
+		deleteComplaint(complaint.id).done(function() {
+			reloadList();
+		});
+	});
+}
+
+$("#buttonDialogTest").click(function() {
+	$(" #testDialog ").dialog({
+		modal: true
+	}).show();
+});
+
+function showUpdateDialog(data, buttons) {
+	$("#latitudeUpdate").val(data.latitude);
+	$("#longitudeUpdate").val(data.longitude);
+	$("#addressUpdate").val(data.address);
+	$("#messageUpdate").val(data.message);
+	$("#plateNumberUpdate").val(data.plateNumber);
+	$(" #updateDialog ").dialog({
+		modal: true,
+		buttons: buttons, 
+	}).show();
+}
+
+function updateComplaint(complaint) {
+	var toSend = {
+			id : complaint.id,
+	    	latitude : complaint.latitude,
+	    	longitude : complaint.longitude,
+	    	address : complaint.address,
+	    	message : complaint.message,
+	    	plateNumber : complaint.plateNumber
+	};
+	   
+	return $.ajax({
+		url: "api/Rest/updateComplaint",
+		type: "POST",
+		data: JSON.stringify(toSend),
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'json',
+		async: false
+	});
+}
+
+function createUpdateButton(complaint) {
+	var buttonUpdate = $("<button>Update</button>").click(function() {
+		showUpdateDialog(complaint, {
+			"Update": function() {
+				var dialog = $(this);
+				complaint.latitude = $("#latitudeUpdate").val();
+				complaint.longitude = $("#longitudeUpdate").val();
+				complaint.address = $("#addressUpdate").val();
+				complaint.message = $("#messageUpdate").val();
+				complaint.plateNumber = $("#plateNumberUpdate").val();
+				if(complaint.plateNumber && complaint.address && complaint.latitude && complaint.longitude) {
+					updateComplaint(complaint).done(function() {
+						reloadList();
+						dialog.dialog('close');
+					});
+				}
+				
+			}
+		});
+	});
+	return buttonUpdate;
+}
 
 function getAllMessages() {
 	return $.ajax({
@@ -78,12 +155,16 @@ function renderComplaint(container, complaint) {
 			"</td><td>" + complaint.longitude + "</td><td>" + complaint.address + 
 			"</td><td>" + complaint.message + "</td><td>" + complaint.plateNumber + "</td></tr>");
 	
+	line.append(createDeleteButton(complaint));
+	line.append(createUpdateButton(complaint));
 	container.append(line);
 }
 
 function reloadList() {
 	getAllMessages().done(function(data) {
 		var container = $("#container_configuration");
+		container.html("");
+		container.append("<tr><th>Id</th><th>Latitude</th><th>Longitude</th><th>Address</th><th>Message</th><th>Number</th></tr>");
 		$.each(data, function() {
 			renderComplaint(container, this);
 		});

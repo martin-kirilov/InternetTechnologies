@@ -153,4 +153,43 @@ public class ComplaintsService {
 		}
 	}
 
+	public void deleteComplaint(long complaintid) {
+		final EntityManager em = emf.createEntityManager();
+		final EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			
+			final Complaint c = em.find(Complaint.class, complaintid);
+			if(c != null) {
+				em.remove(c);
+			}
+			
+			tx.commit();
+		} finally {
+			if(tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+
+	public void updateComplaint(Complaint c) {
+		final EntityManager em = emf.createEntityManager();
+		final EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			
+			em.merge(c);
+			
+			tx.commit();
+		} finally {
+			if(tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+
 }

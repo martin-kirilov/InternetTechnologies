@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -29,21 +30,26 @@ public class Rest {
     	this.complaintsService = ComplaintsService.getInstance();
     }
    
-    
     @POST
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Complaint addComplaint(Complaint c) {
-    	//create message
-    	
-    	System.out.println(c.getLongitude());
-    	System.out.println(c.getLatitude());
-    	System.out.println(c.getAddress());
-    	System.out.println(c.getMessage());
+    	//System.out.println(c.getLongitude());
+    	//System.out.println(c.getLatitude());
+    	//System.out.println(c.getAddress());
+    	//System.out.println(c.getMessage());
     	
     	complaintsService.createComplaint(c);
     	return c;
+    }
+    
+    @DELETE
+    @Path("deleteComplaint/{complaintid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteComplaint(@PathParam("complaintid") long complaintid) {
+    	complaintsService.deleteComplaint(complaintid);
     }
     
     @GET
@@ -53,13 +59,13 @@ public class Rest {
     	List<Complaint> list = new ArrayList<Complaint>();
     	list = complaintsService.getAllComplaints();
     	for (Complaint complaint : list) {
-    		System.out.println(complaint.getLongitude());
-			System.out.println(complaint.getLatitude());
-			System.out.println(complaint.getAddress());
-			System.out.println(complaint.getMessage());
-			System.out.println(complaint.getImagePath());
-			System.out.println(complaint.getPlateNumber());
-			System.out.println("-----------------------");
+    		//System.out.println(complaint.getLongitude());
+			//System.out.println(complaint.getLatitude());
+			//System.out.println(complaint.getAddress());
+			//System.out.println(complaint.getMessage());
+			//System.out.println(complaint.getImagePath());
+			//System.out.println(complaint.getPlateNumber());
+			//System.out.println("-----------------------");
 		}
     	return list;
     }
@@ -75,6 +81,13 @@ public class Rest {
     	executeOCR(complaint);
     }
     
+    @POST
+    @Path("updateComplaint")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateComplaint(Complaint c) {
+    	System.out.println("Update called!!!!!!!!!!!!!!!!!!!!!!1");
+    	complaintsService.updateComplaint(c);
+    }
     
     public void executeOCR(Complaint c) throws InterruptedException, IOException {
     	String command = "./LicensePlateRec ./" + c.getId() + ".jpg";
