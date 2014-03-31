@@ -1,29 +1,60 @@
 var id;
 
 $("#button_send").click(function() {
-    var toSend = {
-    	latitude : $("#latitude").val(),
-    	longitude : $("#longitude").val(),
-    	address : $("#address").val(),
-    	message : $("#message").val()
-    };
-    
-    var jqXHR =  $.ajax({
-    	url: "api/Rest/add",
-    	type: "POST",
-    	data: JSON.stringify(toSend),
-    	contentType: 'application/json; charset=utf-8',
-    	dataType: 'json',
-    	async: false
-    });
-    id = jQuery.parseJSON(jqXHR.responseText).id;
-    return jqXHR;
+	showCreateDialog({
+		"Create": function() {
+			var dialog = $(this);
+			toSend = null;
+			var toSend = {
+			    	latitude : $("#latitude").val(),
+			    	longitude : $("#longitude").val(),
+			    	address : $("#address").val(),
+			    	message : $("#message").val()
+			    };
+			console.log("asdasd");
+			var jqXHR =  $.ajax({
+		    	url: "api/Rest/add",
+		    	type: "POST",
+		    	data: JSON.stringify(toSend),
+		    	contentType: 'application/json; charset=utf-8',
+		    	dataType: 'json',
+		    	async: false
+		    }).done(function() {
+				reloadList();
+				dialog.dialog('close');
+				showUploadImageDialog({
+					"Ok": function() {
+						reloadList();
+						var dialog2 = $(this);
+						dialog2.dialog('close');
+						window.location.reload();
+					}
+				});
+			});
+			id = jQuery.parseJSON(jqXHR.responseText).id;
+			return jqXHR;
+		}
+	});
 });
 
+function showCreateDialog(buttons) {
+	$(" #container ").dialog({
+		modal: true,
+		buttons: buttons, 
+	}).show();
+}
+
+function showUploadImageDialog(buttons) {
+	$(" #dragzone ").dialog({
+		modal: true,
+		buttons: buttons, 
+	}).show();
+}
 
 $("#button_getAll").click(function() {
 	return getAllMessages();
 });
+
 
 (function($){
 	$(document).ready(function(){
@@ -34,12 +65,15 @@ $("#button_getAll").click(function() {
 		});
 		$('#dragzone').bind('drop',function(event){
 			$(event.target).css('background-color','white');
+			console.log("drop");
 			$.FileUpload($(event.target).attr('path'),event.originalEvent.dataTransfer.files);
+			console.log("after upload");
 			event.stopPropagation();
 			event.preventDefault();
 		});
 	});
 })(jQuery);
+
 
 $.FileUpload = function(path,files) {
 
@@ -48,9 +82,9 @@ $.FileUpload = function(path,files) {
 	
 	fileUpload = xhr.upload,
 	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4) {
-			response = $.parseJson(xhr.responseText);
-		}
+		//if(xhr.readyState == 4) {
+		//	response = $.parseJson(xhr.responseText);
+		//}
 	};
 
 	xhr.open("POST", 'api/Rest/' + id + '/image', true);
@@ -60,7 +94,6 @@ $.FileUpload = function(path,files) {
 	xhr.setRequestHeader("X-File-Size", file.fileSize);
 	xhr.setRequestHeader("Content-Type", "application/octet-stream");
 	xhr.send(file);
-	window.location.reload();
 };
 
 function deleteComplaint(complaintId) {
@@ -79,12 +112,6 @@ function createDeleteButton(complaint) {
 		});
 	});
 }
-
-$("#buttonDialogTest").click(function() {
-	$(" #testDialog ").dialog({
-		modal: true
-	}).show();
-});
 
 function showUpdateDialog(data, buttons) {
 	$("#latitudeUpdate").val(data.latitude);
@@ -117,6 +144,7 @@ function updateComplaint(complaint) {
 		async: false
 	});
 }
+
 
 function createUpdateButton(complaint) {
 	var buttonUpdate = $("<button>Update</button>").click(function() {

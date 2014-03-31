@@ -6,7 +6,7 @@
 		<title>Complaint</title>
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/black-tie/jquery-ui.css">
 		
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="http://code.jquery.com/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		
 		<style type="text/css">
@@ -41,36 +41,23 @@
 			<h3 align="center">Web page for automobile complaints.</h3>
 		</div>
 	
-	<div style="position: absolute;
-	top: 70px;
-	bottom: 20px;
-	left:50px;
-	width:300px;">
-		<div id="container" style="">
-			Longitude: <input type="number" name="longitude" value="" id="longitude"> <br>
-			Latitude: <input type="number" name="latitude" value="" id="latitude"> <br>
-			Address: <input type="text" name="address" value="" id="address"> <br>
-			Message: <textarea name="message" COLS="30" ROWS="6" id="message"></textarea> <br>
+		<div style="position: absolute; top: 70px; bottom: 20px; left:50px; width:300px;">
+			<div id="container" style="display:none">
+				Longitude: <input type="number" name="longitude" value="" id="longitude"> <br>
+				Latitude: <input type="number" name="latitude" value="" id="latitude"> <br>
+				Address: <input type="text" name="address" value="" id="address"> <br>
+				Message: <textarea name="message" COLS="30" ROWS="6" id="message"></textarea> <br>
+			</div>
+		
+			<button id="button_send">Send</button> <br>
+		
+			<div id="dragzone" style="width:200px; height:100px; background-color:#7adbce; display:none">
+				Drag image here to upload.
+			</div>
 		</div>
 		
-		<button id="button_send">Send</button> <br>
-		
-		<div id="dragzone" style="width:220px; height:100px; background-color:#7adbce">
-		Image upload.
-		</div>
-		
-		<button id="button_getAll">Get all complaints</button>
-		
-		</div>
-		
-		
-		<div style="position: absolute;
-		top: 70px;
-		bottom: 20px;
-		left:400px;
-		">
+		<div style="position: absolute; top: 70px; bottom: 20px; left:400px;">
 			<table class="gridtable" id="container_configuration" data-provide="ajax" data-template="Complaints" data-url="/api/Rest/getAll">
-				
 			</table>
 		</div>
 		
