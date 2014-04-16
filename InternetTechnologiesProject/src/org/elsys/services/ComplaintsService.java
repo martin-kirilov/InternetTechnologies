@@ -11,8 +11,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import org.elsys.entities.Complaint;
+import org.elsys.entities.User;
+import org.elsys.entities.UserRole;
 
 public class ComplaintsService {
 
@@ -25,7 +28,7 @@ public class ComplaintsService {
 	
 	protected ComplaintsService() {
 		try {
-			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+			Class.forName("org.apache.derby.jdbc.ClientDriver");
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException("Driver not found", e);
 		}
@@ -106,13 +109,14 @@ public class ComplaintsService {
 		}
 	}
 
-	public void createComplaint(Complaint complaint) {
+	public void createComplaint(String authorUsername, Complaint complaint) {
 		final EntityManager em = emf.createEntityManager();
 		final EntityTransaction tx = em.getTransaction();
 		
 		try {
 			tx.begin();
 			
+			complaint.setAuthor(getUser(em, authorUsername));
 			em.persist(complaint);
 			
 			tx.commit();
@@ -124,7 +128,12 @@ public class ComplaintsService {
 		}
 	}
 	
-	
+	private User getUser(EntityManager em, String username) {
+		final TypedQuery<User> query = em.createNamedQuery("byUsername", User.class);
+		query.setParameter("username", username);
+		return query.getSingleResult();
+	}
+
 	public List<Complaint> getAllComplaints() {
 		EntityManager em = emf.createEntityManager();
 		try {
@@ -182,6 +191,29 @@ public class ComplaintsService {
 			tx.begin();
 			
 			em.merge(c);
+			
+			tx.commit();
+		} finally {
+			if(tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+
+	public void createInitialUser() {
+		final EntityManager em = emf.createEntityManager();
+		final EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			
+			final User user1 = new User();
+			user1.setUsername("admin");
+			user1.setPassword("admin");
+			user1.setRole(UserRole.ADMIN);
+			
+			em.persist(user1);
 			
 			tx.commit();
 		} finally {

@@ -1,5 +1,16 @@
 var id;
 
+$("#button_logout").click(function() {
+	$.ajax({
+		url: "api/Rest/logout",
+		type: "POST"
+	}).done(function() {
+		alert("Logout successful.");
+		location.reload();
+	});
+	
+});
+
 $("#button_send").click(function() {
 	showCreateDialog({
 		"Create": function() {
@@ -11,8 +22,7 @@ $("#button_send").click(function() {
 			    	address : $("#address").val(),
 			    	message : $("#message").val()
 			    };
-			console.log("asdasd");
-			var jqXHR =  $.ajax({
+			var response =  $.ajax({
 		    	url: "api/Rest/add",
 		    	type: "POST",
 		    	data: JSON.stringify(toSend),
@@ -31,8 +41,8 @@ $("#button_send").click(function() {
 					}
 				});
 			});
-			id = jQuery.parseJSON(jqXHR.responseText).id;
-			return jqXHR;
+			id = jQuery.parseJSON(response.responseText).id;
+			return response;
 		}
 	});
 });
@@ -65,9 +75,7 @@ $("#button_getAll").click(function() {
 		});
 		$('#dragzone').bind('drop',function(event){
 			$(event.target).css('background-color','white');
-			console.log("drop");
 			$.FileUpload($(event.target).attr('path'),event.originalEvent.dataTransfer.files);
-			console.log("after upload");
 			event.stopPropagation();
 			event.preventDefault();
 		});

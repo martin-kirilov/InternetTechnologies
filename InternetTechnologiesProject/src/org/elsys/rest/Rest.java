@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,6 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 import org.elsys.entities.Complaint;
 import org.elsys.services.ComplaintsService;
@@ -29,18 +31,34 @@ public class Rest {
     public Rest() {
     	this.complaintsService = ComplaintsService.getInstance();
     }
+    
+    @POST
+    @Path("logout")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public void logout(@Context HttpServletRequest request) {
+    	request.getSession().invalidate();
+    	System.out.println("LOGOUT !!!!!!!!!!11");
+	}
+    
+    @POST
+    @Path("install")
+    public void installDB() {
+    	complaintsService.createInitialUser();
+    	System.out.println("test");
+    }
    
     @POST
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Complaint addComplaint(Complaint c) {
+    public Complaint addComplaint(@Context SecurityContext securityContext, Complaint c) {
     	//System.out.println(c.getLongitude());
     	//System.out.println(c.getLatitude());
     	//System.out.println(c.getAddress());
     	//System.out.println(c.getMessage());
+    	String name = securityContext.getUserPrincipal().getName();
     	
-    	complaintsService.createComplaint(c);
+    	complaintsService.createComplaint(name, c);
     	return c;
     }
     
