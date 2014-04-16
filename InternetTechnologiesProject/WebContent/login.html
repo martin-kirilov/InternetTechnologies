@@ -1,7 +1,41 @@
-<form method="post"
-action="j_security_check"
->
-<input type="text" name="j_username"/>
-<input type="text" name="j_password"/>
-<input type="submit"/>
-</form>
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Login</title>
+		<link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="./css/main.css" />
+		
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		<script src="./js/libs/jquery-1.10.2/jquery-1.10.2.min.js"></script>
+		<script src="./js/libs/jqueryui-1.10.0/jquery-ui.min.js"></script>
+		
+	</head>
+	
+	<body>
+		
+		<form method="post" action="j_security_check">
+			<input type="text" name="j_username"/>
+			<input type="password" name="j_password"/>
+			<input type="submit"/>
+		</form>
+		
+		<button id="button_register_user">Register</button>
+		
+		<div id="register_dialog" style="display:none">
+			Username: <input type='text' id="username"/> </br>
+			Password: <input type='password' id="password"/> </br>
+		</div>
+		<script src="./js/index.js"></script>
+	</body>
+
+</html>
+
+
+
+
+
+
+
+
+

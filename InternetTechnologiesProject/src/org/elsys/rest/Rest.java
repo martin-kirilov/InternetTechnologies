@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import org.elsys.entities.Complaint;
+import org.elsys.entities.User;
 import org.elsys.services.ComplaintsService;
 
 @Path("Rest")
@@ -33,18 +34,24 @@ public class Rest {
     }
     
     @POST
+    @Path("register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void addUser(User u) {
+    	complaintsService.addUser(u);
+    }
+    
+    @POST
     @Path("logout")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public void logout(@Context HttpServletRequest request) {
     	request.getSession().invalidate();
-    	System.out.println("LOGOUT !!!!!!!!!!11");
 	}
     
     @POST
     @Path("install")
     public void installDB() {
     	complaintsService.createInitialUser();
-    	System.out.println("test");
     }
    
     @POST
@@ -52,12 +59,7 @@ public class Rest {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Complaint addComplaint(@Context SecurityContext securityContext, Complaint c) {
-    	//System.out.println(c.getLongitude());
-    	//System.out.println(c.getLatitude());
-    	//System.out.println(c.getAddress());
-    	//System.out.println(c.getMessage());
     	String name = securityContext.getUserPrincipal().getName();
-    	
     	complaintsService.createComplaint(name, c);
     	return c;
     }
@@ -76,15 +78,6 @@ public class Rest {
     public List<Complaint> getAllComplaints() {
     	List<Complaint> list = new ArrayList<Complaint>();
     	list = complaintsService.getAllComplaints();
-    	for (Complaint complaint : list) {
-    		//System.out.println(complaint.getLongitude());
-			//System.out.println(complaint.getLatitude());
-			//System.out.println(complaint.getAddress());
-			//System.out.println(complaint.getMessage());
-			//System.out.println(complaint.getImagePath());
-			//System.out.println(complaint.getPlateNumber());
-			//System.out.println("-----------------------");
-		}
     	return list;
     }
     
@@ -94,7 +87,6 @@ public class Rest {
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	public void setComplaintImage(@Context ServletContext ctx,
 			@PathParam("complaintid") long complaintid, InputStream content) throws IOException, InterruptedException {
-    	//Complaint complaint = em.find(Complaint.class, complaintid);
     	Complaint complaint = complaintsService.addImageToComplaint(complaintid, content);
     	executeOCR(complaint);
     }
@@ -103,19 +95,15 @@ public class Rest {
     @Path("updateComplaint")
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateComplaint(Complaint c) {
-    	System.out.println("Update called!!!!!!!!!!!!!!!!!!!!!!1");
     	complaintsService.updateComplaint(c);
     }
     
     public void executeOCR(Complaint c) throws InterruptedException, IOException {
     	String command = "./LicensePlateRec ./" + c.getId() + ".jpg";
-		System.out.println(command);
 		Process p = Runtime.getRuntime().exec(command);
 		p.waitFor();
 		Scanner sc = new Scanner(p.getInputStream());
 		String result = sc.nextLine();
-		System.out.println(result);
-		//save result into DB.
 		complaintsService.addPlateToComplaint(result, c);
 		sc.close();
     }

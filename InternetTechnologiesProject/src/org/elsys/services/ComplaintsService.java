@@ -56,7 +56,7 @@ public class ComplaintsService {
 		try {
 			tx.begin();
 			complaint = em.find(Complaint.class, complaintid);
-			String filename = "/home/martopc/EEworkspace/InternetTechnologiesProject/" + complaint.getId() + ".jpg";
+			String filename = "./" + complaint.getId() + ".jpg";
 			saveToFile(content, filename);
 			System.out.println("saved to file : " + filename);
 			complaint.setImagePath(filename);
@@ -214,6 +214,24 @@ public class ComplaintsService {
 			user1.setRole(UserRole.ADMIN);
 			
 			em.persist(user1);
+			
+			tx.commit();
+		} finally {
+			if(tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+
+	public void addUser(User u) {
+		final EntityManager em = emf.createEntityManager();
+		final EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			
+			em.persist(u);
 			
 			tx.commit();
 		} finally {

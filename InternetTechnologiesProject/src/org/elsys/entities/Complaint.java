@@ -12,7 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity(name = "Complaints")
 @NamedQueries({
-	@NamedQuery(name = "allComplaints", query = "SELECT c FROM Complaints c")
+	@NamedQuery(name = "allComplaints", query = "SELECT c FROM Complaints c"),
+	@NamedQuery(name = "allComplaintsWithUsers", query = "SELECT c FROM Complaints c, Users u WHERE u.username=:username")
 })
 public class Complaint {
 	
