@@ -2,7 +2,6 @@ package org.elsys.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,7 +11,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -75,10 +73,8 @@ public class Rest {
     @GET
     @Path("getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Complaint> getAllComplaints() {
-    	List<Complaint> list = new ArrayList<Complaint>();
-    	list = complaintsService.getAllComplaints();
-    	return list;
+    public List<Complaint> getAllComplaints(@Context SecurityContext securityContext) {
+    	return complaintsService.getAllComplaints(securityContext.getUserPrincipal().getName());
     }
     
     @POST
@@ -92,10 +88,11 @@ public class Rest {
     }
     
     @POST
-    @Path("updateComplaint")
+    @Path("updateComplaint/{complaintid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateComplaint(Complaint c) {
-    	complaintsService.updateComplaint(c);
+    public void updateComplaint(@Context SecurityContext securityContext, @PathParam("complaintid") long complaintid, Complaint c) {
+
+    	complaintsService.updateComplaint(c, complaintid);
     }
     
     public void executeOCR(Complaint c) throws InterruptedException, IOException {

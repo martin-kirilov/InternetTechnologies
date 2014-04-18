@@ -12,6 +12,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 import org.elsys.entities.Complaint;
 import org.elsys.entities.User;
@@ -85,8 +87,6 @@ public class ComplaintsService {
 				outputStream.write(bytes, 0, read);
 			}
 	 
-			System.out.println("Done!");
-	 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -134,10 +134,10 @@ public class ComplaintsService {
 		return query.getSingleResult();
 	}
 
-	public List<Complaint> getAllComplaints() {
+	public List<Complaint> getAllComplaints(String username) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			return em.createNamedQuery("allComplaints", Complaint.class).getResultList();
+			return em.createNamedQuery("allComplaints", Complaint.class).setParameter("username", username).getResultList();
 		} finally {
 			em.close();
 		}
@@ -183,9 +183,15 @@ public class ComplaintsService {
 		}
 	}
 
-	public void updateComplaint(Complaint c) {
+	public void updateComplaint(Complaint c, long complaintid) {
 		final EntityManager em = emf.createEntityManager();
 		final EntityTransaction tx = em.getTransaction();
+		
+		final Complaint complaint = em.find(Complaint.class, complaintid);
+	
+		final User u = em.find(User.class, complaint.getAuthor().getId());
+		
+		c.setAuthor(u);
 		
 		try {
 			tx.begin();

@@ -1,41 +1,10 @@
 var id;
 
-$("#button_register_user").click(function() {
-	alert("click");
-	showRegisterDialog("", {
-		"Create": function() {
-			var dialog = $(this);
-			var toSend = {
-				username: $("#username").val(),
-				password: $("#password").val(),
-				role: "USER"
-			};
-			$.ajax({
-				url: "api/Rest/register",
-		    	type: "POST",
-		    	data: JSON.stringify(toSend),
-		    	contentType: 'application/json; charset=utf-8',
-		    	dataType: 'json'
-			}).done(function() {
-				dialog.dialog('close');
-			});
-		}
-	});
-});
-
-function showRegisterDialog(text, buttons) {
-	$("#register_dialog").dialog({
-		modal: true,
-		buttons: buttons
-	}).show();
-}
-
 $("#button_logout").click(function() {
 	$.ajax({
 		url: "api/Rest/logout",
 		type: "POST"
 	}).done(function() {
-		alert("Logout successful.");
 		location.reload();
 	});
 	
@@ -45,7 +14,6 @@ $("#button_send").click(function() {
 	showCreateDialog({
 		"Create": function() {
 			var dialog = $(this);
-			toSend = null;
 			var toSend = {
 			    	latitude : $("#latitude").val(),
 			    	longitude : $("#longitude").val(),
@@ -67,7 +35,7 @@ $("#button_send").click(function() {
 						reloadList();
 						var dialog2 = $(this);
 						dialog2.dialog('close');
-						window.location.reload();
+						location.reload();
 					}
 				});
 			});
@@ -90,11 +58,6 @@ function showUploadImageDialog(buttons) {
 		buttons: buttons, 
 	}).show();
 }
-
-$("#button_getAll").click(function() {
-	return getAllMessages();
-});
-
 
 (function($){
 	$(document).ready(function(){
@@ -165,16 +128,16 @@ function showUpdateDialog(data, buttons) {
 
 function updateComplaint(complaint) {
 	var toSend = {
-			id : complaint.id,
-	    	latitude : complaint.latitude,
-	    	longitude : complaint.longitude,
-	    	address : complaint.address,
-	    	message : complaint.message,
-	    	plateNumber : complaint.plateNumber
+		id : complaint.id,
+	    latitude : complaint.latitude,
+	    longitude : complaint.longitude,
+	    address : complaint.address,
+	    message : complaint.message,
+	    plateNumber : complaint.plateNumber
 	};
 	   
 	return $.ajax({
-		url: "api/Rest/updateComplaint",
+		url: "api/Rest/updateComplaint/" + complaint.id,
 		type: "POST",
 		data: JSON.stringify(toSend),
 		contentType: 'application/json; charset=utf-8',
@@ -234,7 +197,6 @@ function reloadList() {
 		$.each(data, function() {
 			renderComplaint(container, this);
 		});
-		
 	});
 }
 
