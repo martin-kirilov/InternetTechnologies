@@ -162,8 +162,7 @@ function createUpdateButton(complaint) {
 						reloadList();
 						dialog.dialog('close');
 					});
-				}
-				
+				}	
 			}
 		});
 	});

@@ -4,35 +4,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>Complaint</title>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/black-tie/jquery-ui.css">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="./css/main.css">
 		
 		<script src="http://code.jquery.com/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		
-		<style type="text/css">
-		table.gridtable {
-			font-family: verdana,arial,sans-serif;
-			font-size:14px;
-			color:#333333;
-			border-width: 1px;
-			border-color: #666666;
-			border-collapse: collapse;
-		}
-		table.gridtable th {
-			border-width: 1px;
-			padding: 8px;
-			border-style: solid;
-			border-color: #666666;
-			background-color: #dedede;
-		}
-		table.gridtable td {
-			border-width: 1px;
-			padding: 8px;
-			border-style: solid;
-			border-color: #666666;
-			background-color: #ffffff;
-		}
-		</style>
 	</head>
 	
 	<body>
@@ -41,28 +17,28 @@
 			<h3 align="center">Web page for automobile complaints.</h3>
 		</div>
 	
-		<div style="position: absolute; top: 70px; bottom: 20px; left:50px; width:300px;">
-			<div id="container" style="display:none">
+		<div style="position:absolute; top:50%; left:50%; margin-top:-230px; margin-left:-420px; width:720px;">
+			<div id="container" style="display:none;">
 				Longitude: <input type="number" name="longitude" value="" id="longitude"> <br>
 				Latitude: <input type="number" name="latitude" value="" id="latitude"> <br>
 				Address: <input type="text" name="address" value="" id="address"> <br>
 				Message: <textarea name="message" COLS="30" ROWS="6" id="message"></textarea> <br>
 			</div>
 		
-			<button id="button_send">Send</button> <br>
-			<button id="button_logout">Logout</button> <br>
+			<button id="button_send" class="btn">Add</button>
+			<button id="button_logout" class="btn" style="position:relative; left:100%;">Logout</button> <br>
 		
 			<div id="dragzone" style="width:200px; height:100px; background-color:#7adbce; display:none">
 				Drag image here to upload.
 			</div>
 		</div>
 		
-		<div style="position: absolute; top: 70px; bottom: 20px; left:400px;">
+		<div style="position:absolute; top:50%; left:50%; margin-top:-200px; margin-left:-420px;">
 			<table class="gridtable" id="container_configuration" data-provide="ajax" data-template="Complaints" data-url="/api/Rest/getAll">
 			</table>
 		</div>
 		
-		<div id="updateDialog" style="display:none">
+		<div id="updateDialog" style="display:none;">
 			Longitude: <input type="number" name="longitude" value="" id="longitudeUpdate"/> <br>
 			Latitude: <input type="number" name="latitude" value="" id="latitudeUpdate"/> <br>
 			Address: <input type="text" name="address" value="" id="addressUpdate"/> <br>

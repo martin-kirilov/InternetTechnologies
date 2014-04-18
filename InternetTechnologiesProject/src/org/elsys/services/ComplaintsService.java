@@ -12,8 +12,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 
 import org.elsys.entities.Complaint;
 import org.elsys.entities.User;
@@ -99,7 +97,6 @@ public class ComplaintsService {
 			}
 			if (outputStream != null) {
 				try {
-					// outputStream.flush();
 					outputStream.close();
 				} catch (IOException e) {
 					e.printStackTrace();
